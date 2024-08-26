@@ -1,12 +1,11 @@
 package com.vir.config;
 
 import java.util.Arrays;
+
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
-import org.apache.catalina.startup.UserDatabase;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

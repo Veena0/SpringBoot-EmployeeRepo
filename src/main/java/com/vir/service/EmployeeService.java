@@ -1,12 +1,14 @@
 package com.vir.service;
 
 import java.util.List;
+
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.vir.exception.EmployeeNotFoundException;
 import com.vir.model.Employee;
 import com.vir.model.UserInfo;
 import com.vir.repo.EmployeeRepository;
@@ -31,8 +33,10 @@ public class EmployeeService implements IEmployeeService {
 	}
 
 	@Override
-	public Optional<Employee> getEmployeeById(Long id) {
-		return employeeRepository.findById(id);
+	public Optional<Employee> getEmployeeById(Long id) throws EmployeeNotFoundException {
+		Optional<Employee> employee = employeeRepository.findById(id);
+		if(employee!=null) return employee;
+		else throw new EmployeeNotFoundException("Employee not found with the id: " +id);
 	}
 
 	@Override

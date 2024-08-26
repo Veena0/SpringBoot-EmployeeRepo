@@ -1,6 +1,6 @@
 package com.vir.demo;
 
-import static org.mockito.ArgumentMatchers.any;
+
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
@@ -22,6 +22,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vir.model.Employee;
 import com.vir.service.EmployeeService;
 
+
 @WebMvcTest
 public class EmployeeControllerTest {
 
@@ -33,7 +34,7 @@ public class EmployeeControllerTest {
 
 	@Autowired
 	private ObjectMapper objectMapper;
-
+	
 	@BeforeEach
 	public void setUp() {
 		// Initialize or mock any required setup
@@ -58,7 +59,8 @@ public class EmployeeControllerTest {
 		when(employeeService.getAllEmployees()).thenReturn(employees);
 
 		// Act & Assert
-		mockMvc.perform(MockMvcRequestBuilders.get("/employees/all").contentType(MediaType.APPLICATION_JSON))
+		mockMvc.perform(MockMvcRequestBuilders.get("/employees/all")
+				.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value("John Doe"))
 				.andExpect(MockMvcResultMatchers.jsonPath("$[1].name").value("Jane Doe"));
@@ -97,13 +99,17 @@ public class EmployeeControllerTest {
 	        // Act & Assert
 	        mockMvc.perform(MockMvcRequestBuilders.post("/employees")
 	                .contentType(MediaType.APPLICATION_JSON)
-	                .content(objectMapper.writeValueAsString(employee)));    
+	                .content(objectMapper.writeValueAsString(employee)))
+	                .andExpect(MockMvcResultMatchers.status().isOk())
+					.andExpect(MockMvcResultMatchers.jsonPath("$.id").value(11L))
+					.andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Sony"))
+					.andExpect(MockMvcResultMatchers.jsonPath("$.department").value("HR"));
 	 
    }
 	  
 	  @Test
 	  @WithMockUser(username = "admin", roles = "ADMIN") 
-	  public void whenUpdateEmployee_thenStatus200() throws Exception { 
+	  public void whenUpdateEmployee_thenStatus4xx() throws Exception { 
 		  Employee employee = new Employee(); 
 		  employee.setId(1011L); 
 		  employee.setName("John Doe");
@@ -121,7 +127,7 @@ public class EmployeeControllerTest {
 	  
 	 
       
-	  //@Test
+	  @Test
 	  @WithMockUser(username = "admin", roles = "ADMIN") 
 	  public void whenDeleteEmployee_thenStatus204() throws Exception {
 	  doNothing().when(employeeService).deleteEmployee(1L);
